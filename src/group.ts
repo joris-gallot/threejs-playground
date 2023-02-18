@@ -8,6 +8,7 @@ import {
   MeshBasicMaterial,
   PerspectiveCamera,
   AxesHelper,
+  Group,
 } from "three";
 // import * as dat from "dat.gui";
 
@@ -23,8 +24,7 @@ const renderer = new WebGLRenderer({ canvas });
 renderer.setSize(width, height);
 
 const camera = new PerspectiveCamera(75, width / height);
-camera.position.z = 1;
-camera.position.x = 2;
+camera.position.z = 3;
 
 const scene = new Scene();
 
@@ -33,12 +33,21 @@ scene.add(axesHelper);
 
 const geometry = new BoxGeometry(1, 1, 1);
 const material = new MeshBasicMaterial({ color: "red" });
-const mesh = new Mesh(geometry, material);
 
-mesh.rotateZ(Math.PI * 0.25);
+const group = new Group();
+const xPositions = [-1.5, 0, 1.5];
 
-camera.lookAt(mesh.position);
+for (let i = 0; i < xPositions.length; i++) {
+  const mesh = new Mesh(geometry, material);
 
-scene.add(mesh);
+  mesh.translateX(xPositions[i]);
+  mesh.scale.y = 2;
+
+  group.add(mesh);
+}
+
+group.rotateZ(Math.PI * 0.25);
+
+scene.add(group);
 
 renderer.render(scene, camera);
