@@ -1,23 +1,44 @@
-import './style.css'
-import typescriptLogo from './typescript.svg'
-import { setupCounter } from './counter'
+import "./style.css";
 
-document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
-  <div>
-    <a href="https://vitejs.dev" target="_blank">
-      <img src="/vite.svg" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://www.typescriptlang.org/" target="_blank">
-      <img src="${typescriptLogo}" class="logo vanilla" alt="TypeScript logo" />
-    </a>
-    <h1>Vite + TypeScript</h1>
-    <div class="card">
-      <button id="counter" type="button"></button>
-    </div>
-    <p class="read-the-docs">
-      Click on the Vite and TypeScript logos to learn more
-    </p>
-  </div>
-`
+import {
+  WebGLRenderer,
+  Mesh,
+  Scene,
+  BoxGeometry,
+  MeshBasicMaterial,
+  PerspectiveCamera,
+  AxesHelper,
+} from "three";
+// import * as dat from "dat.gui";
 
-setupCounter(document.querySelector<HTMLButtonElement>('#counter')!)
+// const gui = new dat.GUI();
+const { width, height } = {
+  width: 600,
+  height: 400,
+} as const;
+
+const canvas = document.querySelector("#canvas") as HTMLCanvasElement;
+
+const renderer = new WebGLRenderer({ canvas });
+renderer.setSize(width, height);
+
+const camera = new PerspectiveCamera(75, width / height);
+camera.position.z = 1;
+camera.position.x = 2;
+
+const scene = new Scene();
+
+const axesHelper = new AxesHelper(2);
+scene.add(axesHelper);
+
+const geometry = new BoxGeometry(1, 1, 1);
+const material = new MeshBasicMaterial({ color: "red" });
+const mesh = new Mesh(geometry, material);
+
+mesh.rotateZ(Math.PI * 0.25);
+
+camera.lookAt(mesh.position);
+
+scene.add(mesh);
+
+renderer.render(scene, camera);
